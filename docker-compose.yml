@@ -1,0 +1,34 @@
+
+version: '3'
+services:
+  app:
+    build: ./app
+    depends_on:
+      - mysql
+    environment:
+      MYSQL_HOST: "mysql"
+      MYSQL_PASSWORD: "root"
+      MYSQL_USER: "root"
+      MYSQL_DB: "entries"
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./app:/usr/src/app/
+
+  mysql:
+    command:
+        - --character-set-server=utf8mb4
+        - --collation-server=utf8mb4_unicode_ci
+        - --skip-character-set-client-handshake
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_HOST: "mysql"
+      MYSQL_PASSWORD: "root"
+      MYSQL_USER: "user"
+      MYSQL_DB: "concerts"
+    image: mysql:5.7
+    volumes:
+      - "./mysql:/docker-entrypoint-initdb.d"
+
+
+#docker exec -i concerts_mysql_1 mysql -uroot -proot concerts < setup.sql
